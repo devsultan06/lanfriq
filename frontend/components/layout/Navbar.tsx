@@ -93,17 +93,68 @@ const Navbar = () => {
         <div className="flex items-center gap-4">
           <ThemeToggle />
 
-          {mounted && (
-            <div className="hidden md:block scale-90 origin-right">
-              <ConnectButton
-                showBalance={false}
-                accountStatus={{
-                  smallScreen: "avatar",
-                  largeScreen: "full",
-                }}
-              />
-            </div>
-          )}
+          <ConnectButton.Custom>
+            {({
+              account,
+              chain,
+              openAccountModal,
+              openChainModal,
+              openConnectModal,
+              mounted,
+            }) => {
+              const ready = mounted;
+              const connected = ready && account && chain;
+
+              return (
+                <div
+                  {...(!ready && {
+                    "aria-hidden": true,
+                    style: {
+                      opacity: 0,
+                      pointerEvents: "none",
+                      userSelect: "none",
+                    },
+                  })}
+                >
+                  {(() => {
+                    if (!connected) {
+                      return (
+                        <button
+                          onClick={openConnectModal}
+                          className="bg-white dark:bg-white/10 text-black dark:text-white border border-black/10 dark:border-white/20 px-6 py-2.5 rounded-lg text-[10px] font-bold uppercase tracking-widest hidden md:block hover:bg-black/5 dark:hover:bg-white/20 transition-all shadow-sm"
+                        >
+                          Connect Wallet
+                        </button>
+                      );
+                    }
+
+                    if (chain.unsupported) {
+                      return (
+                        <button
+                          onClick={openChainModal}
+                          className="bg-red-500/10 text-red-500 border border-red-500/20 px-6 py-2.5 rounded-lg text-[10px] font-bold uppercase tracking-widest hidden md:block hover:bg-red-500/20 transition-all shadow-sm"
+                        >
+                          Wrong Network
+                        </button>
+                      );
+                    }
+
+                    return (
+                      <div className="hidden md:flex items-center gap-2">
+                        <button
+                          onClick={openAccountModal}
+                          className="bg-white dark:bg-white/10 text-black dark:text-white border border-black/10 dark:border-white/20 px-4 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 hover:bg-black/5 dark:hover:bg-white/20 transition-all shadow-sm"
+                        >
+                          <div className="w-3 h-3 rounded-full bg-gradient-to-r from-[#6B9E31] to-[#8CC043]" />
+                          {account.displayName}
+                        </button>
+                      </div>
+                    );
+                  })()}
+                </div>
+              );
+            }}
+          </ConnectButton.Custom>
 
           <button
             className="md:hidden p-2 text-black dark:text-white"
@@ -151,15 +202,20 @@ const Navbar = () => {
               >
                 Revenue Model
               </button>
-              <div className="mt-4 flex justify-center">
-                {mounted && (
-                  <ConnectButton
-                    accountStatus={{
-                      smallScreen: "avatar",
-                      largeScreen: "full",
-                    }}
-                  />
-                )}
+              <div className="mt-4">
+                 <ConnectButton.Custom>
+                  {({ account, chain, openConnectModal, openAccountModal, mounted }) => {
+                    const connected = mounted && account && chain;
+                    return (
+                      <button
+                        onClick={connected ? openAccountModal : openConnectModal}
+                        className="w-full bg-[#6B9E31] text-white py-4 rounded-xl text-center text-base"
+                      >
+                        {connected ? account.displayName : "Connect Wallet"}
+                      </button>
+                    );
+                  }}
+                 </ConnectButton.Custom>
               </div>
             </div>
           </motion.div>

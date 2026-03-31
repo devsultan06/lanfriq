@@ -45,24 +45,23 @@ export function Web3Provider({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = React.useState(false);
   React.useEffect(() => setMounted(true), []);
 
-  if (!mounted) {
-    return <>{children}</>;
-  }
-
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider
+          modalSize="compact"
           theme={
-            theme === "dark"
-              ? darkTheme({
-                  accentColor: "#6B9E31",
-                  borderRadius: "large",
-                })
-              : lightTheme({
-                  accentColor: "#6B9E31",
-                  borderRadius: "large",
-                })
+            mounted
+              ? theme === "dark"
+                ? darkTheme({
+                    accentColor: "#6B9E31",
+                    borderRadius: "large",
+                  })
+                : lightTheme({
+                    accentColor: "#6B9E31",
+                    borderRadius: "large",
+                  })
+              : undefined
           }
         >
           {children}
