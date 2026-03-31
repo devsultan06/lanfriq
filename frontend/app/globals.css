@@ -56,3 +56,9 @@ body {
     var(--bg-color) 88.61%
   );
 }
+
+/* Override RainbowKit font to match your project */
+[data-rk] {
+  --rk-fonts-body: var(--font-outfit), sans-serif !important;
+}
+

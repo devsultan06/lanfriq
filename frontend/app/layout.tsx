@@ -20,6 +20,7 @@ export const metadata: Metadata = {
 };
 
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import { Web3Provider } from "@/components/providers/Web3Provider";
 
 export default function RootLayout({
   children,
@@ -35,7 +36,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <main className="min-h-screen">{children}</main>
+          <Web3Provider>
+            <main className="min-h-screen">{children}</main>
+          </Web3Provider>
         </ThemeProvider>
         <Analytics />
       </body>

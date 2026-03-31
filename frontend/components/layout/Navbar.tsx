@@ -27,13 +27,17 @@ const ThemeToggle = () => {
   );
 };
 
+import { ConnectButton } from "@rainbow-me/rainbowkit";
+
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
 
   useEffect(() => {
+    setMounted(true);
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
@@ -57,11 +61,11 @@ const Navbar = () => {
     <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50 transition-all navbar duration-300">
       <div className="w-full flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
-          <img src="/logo.svg" alt="Lanfriq Logo" className="h-[40px]" />
+          <img src="/logo.svg" alt="Lanfriq Logo" className="h-[32px] md:h-[40px]" />
           <img
             src="/LANFRIQ.svg"
             alt="Lanfriq Logo text"
-            className="h-[27px] invert dark:invert-0"
+            className="h-[20px] md:h-[27px] invert dark:invert-0"
           />
         </Link>
 
@@ -88,10 +92,18 @@ const Navbar = () => {
 
         <div className="flex items-center gap-4">
           <ThemeToggle />
-        
-          <button className="bg-white dark:bg-white/10 text-black dark:text-white border border-black/10 dark:border-white/20 px-6 py-2.5 rounded-lg text-[10px] font-bold uppercase tracking-widest hidden md:block hover:bg-black/5 dark:hover:bg-white/20 transition-all">
-            Connect Wallet
-          </button>
+
+          {mounted && (
+            <div className="hidden md:block scale-90 origin-right">
+              <ConnectButton
+                showBalance={false}
+                accountStatus={{
+                  smallScreen: "avatar",
+                  largeScreen: "full",
+                }}
+              />
+            </div>
+          )}
 
           <button
             className="md:hidden p-2 text-black dark:text-white"
@@ -139,9 +151,16 @@ const Navbar = () => {
               >
                 Revenue Model
               </button>
-              <button className="bg-[#6B9E31] text-white py-4 text-center mt-4 rounded-xl">
-                Connect Wallet
-              </button>
+              <div className="mt-4 flex justify-center">
+                {mounted && (
+                  <ConnectButton
+                    accountStatus={{
+                      smallScreen: "avatar",
+                      largeScreen: "full",
+                    }}
+                  />
+                )}
+              </div>
             </div>
           </motion.div>
         )}
