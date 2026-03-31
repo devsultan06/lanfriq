@@ -474,7 +474,7 @@ const HowItWorks = () => {
                   />
                   
                 </div >
-                  <div className="space-y-3 -mt-[140px]">
+                  <div className="space-y-3 -mt-[80px] md:-mt-[140px]">
                   <h3 className="text-xl text-black dark:text-white font-[500]">
                     {step.title}
                   </h3>
