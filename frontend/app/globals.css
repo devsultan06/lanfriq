@@ -1,0 +1,58 @@
+@import url("https://fonts.googleapis.com/css2?family=Baskervville:ital,wght@0,400..700;1,400..700&family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Geist:wght@100..900&family=Lexend:wght@100..900&family=Outfit:wght@100..900&family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-urbanist: "Urbanist", sans-serif;
+  --bg-color: #ffffff;
+  --text-color: #0f0f0f;
+  --stroke-color: rgba(0, 0, 0, 0.05);
+  --navbar-bg: rgba(140, 192, 67, 0.02);
+}
+
+.dark {
+  --bg-color: #000000;
+  --text-color: #ffffff;
+  --stroke-color: rgba(255, 255, 255, 0.1);
+  --navbar-bg: rgba(140, 192, 67, 0.02);
+}
+
+body {
+  font-family: var(--font-urbanist);
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.navbar {
+  border-radius: 16px;
+  border: 1px solid var(--stroke-color);
+  background: var(--navbar-bg);
+  backdrop-filter: blur(12px);
+  width: 95%;
+  max-width: 1440px;
+  padding: 12px 24px;
+}
+
+.but {
+  background: linear-gradient(270deg, #678d31 0%, #8cc043 50%, #415a1f 100%);
+}
+
+.but2 {
+  border: 1px solid var(--stroke-color);
+  background: var(--bg-color);
+}
+
+.bg2 {
+  border-radius: 27px;
+  border: 2px solid #8cc043;
+  background: linear-gradient(
+    252deg,
+    var(--bg-color) 35.76%,
+    var(--Brand-Primary, #8cc043) 63.5%,
+    var(--bg-color) 88.61%
+  );
+}
