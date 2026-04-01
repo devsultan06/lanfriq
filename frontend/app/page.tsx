@@ -3,8 +3,11 @@
 import { motion } from "framer-motion";
 import { Check, Play, ArrowRight, Star } from "lucide-react";
 import Link from "next/link";
+import { useAccount } from "wagmi";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
+import { useRouter } from "next/navigation";
 
-const Hero = () => (
+const Hero = ({ onAction }: { onAction: () => void }) => (
   <section className="relative pt-40 pb-2 px-6 min-h-screen flex items-center justify-center overflow-hidden bg-white dark:bg-black transition-colors">
     {/* Background Images */}
     <div className="absolute inset-0 z-0">
@@ -37,12 +40,12 @@ const Hero = () => (
           NFT-backed receipts.
         </p>
         <div className="flex flex-wrap gap-4 items-center justify-center mb-20">
-          <Link
-            href="/signup"
+          <button
+            onClick={onAction}
             className="but text-white px-[40px] text-[16px] py-[11px] rounded-[10px] font-[500] flex items-center justify-center gap-2 hover:opacity-90 transition-all"
           >
             Get Started <ArrowRight size={18} />
-          </Link>
+          </button>
           <button className="text-black dark:text-white but2 px-[40px] text-[16px] py-[11px] rounded-[10px] font-[500] flex items-center justify-center gap-2 transition-all hover:bg-black/5 dark:hover:bg-white/5">
             Learn More
           </button>
@@ -460,7 +463,6 @@ const HowItWorks = () => {
           >
             {i === 0 ? (
               <>
-              
                 <div className="w-full aspect-[16/8] relative flex items-center justify-center overflow-hidden">
                   <img
                     src={step.image}
@@ -472,9 +474,8 @@ const HowItWorks = () => {
                     alt={step.title}
                     className="w-full h-full object-contain transition-transform duration-700 block dark:hidden"
                   />
-                  
-                </div >
-                  <div className="space-y-3 -mt-[80px] md:-mt-[140px]">
+                </div>
+                <div className="space-y-3 -mt- md:-mt-[140px]">
                   <h3 className="text-xl text-black dark:text-white font-[500]">
                     {step.title}
                   </h3>
@@ -514,7 +515,7 @@ const HowItWorks = () => {
   );
 };
 
-const Stakeholders = () => {
+const Stakeholders = ({ onAction }: { onAction?: () => void }) => {
   const stakeholders = [
     {
       title: "Investors",
@@ -652,7 +653,10 @@ const Stakeholders = () => {
                 ))}
               </ul>
 
-              <button className="bg-[#6B9E31] text-white px-8 py-3.5 rounded-xl font-[500] text-sm hover:opacity-90 transition-all shadow-lg shadow-[#6B9E31]/20">
+              <button
+                onClick={onAction}
+                className="bg-[#6B9E31] text-white px-8 py-3.5 rounded-xl font-[500] text-sm hover:opacity-90 transition-all shadow-lg shadow-[#6B9E31]/20"
+              >
                 {person.button}
               </button>
             </div>
@@ -663,8 +667,7 @@ const Stakeholders = () => {
   );
 };
 
-
-const CTA = () => (
+const CTA = ({ onAction }: { onAction?: () => void }) => (
   <section className="pb-[150px] px-6 bg-white dark:bg-[#0F0F0F]  transition-colors">
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
@@ -697,12 +700,12 @@ const CTA = () => (
             Start Your Real Estate <br /> Tokenization Journey
           </h2>
           <div className="flex flex-wrap gap-4">
-            <Link
-              href="/signup"
+            <button
+              onClick={onAction}
               className="but text-white px-8 py-3.5 rounded-[12px] font-[600] flex items-center justify-center gap-3 hover:opacity-90 transition-all text-[15px] shadow-lg shadow-[#6B9E31]/20"
             >
               Start Tokenization <ArrowRight size={20} />
-            </Link>
+            </button>
             <button className="text-black dark:text-white px-8 py-3.5 rounded-[12px] font-[600] border border-black/10 dark:border-white/10 hover:bg-black/5 dark:hover:bg-white/5 transition-all text-[15px] backdrop-blur-sm">
               Explore Market
             </button>
@@ -730,17 +733,54 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 
 export default function Home() {
+  const { isConnected } = useAccount();
+  const { openConnectModal } = useConnectModal();
+  const router = useRouter();
+
+  const handleAction = () => {
+    if (isConnected) {
+      router.push("/onboarding");
+    } else {
+      openConnectModal?.();
+    }
+  };
+
   return (
     <div className="min-h-screen selection:bg-[#6B9E31] selection:text-white bg-white dark:bg-black transition-colors">
       <Navbar />
       <main>
-        <Hero />
+        {isConnected && (
+          <motion.div
+            initial={{ opacity: 0, x: 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="fixed bottom-8 right-6 md:right-12 z-50 w-[calc(100%-48px)] max-w-md"
+          >
+            <div className="bg-[#6B9E31]/10 backdrop-blur-xl border border-[#6B9E31]/20 p-2 pl-5 pr-5 rounded-full flex items-center justify-between gap-6 shadow-2xl shadow-black/20 text-black dark:text-white overflow-hidden">
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 rounded-full bg-[#6B9E31] flex items-center justify-center text-white shadow-lg shadow-[#6B9E31]/30 flex-shrink-0">
+                  <Star size={18} fill="currentColor" />
+                </div>
+                <div className="space-y-0.5 text-left">
+                  <p className="text-[9px] font-bold uppercase tracking-widest opacity-40">Identity</p>
+                  <p className="text-sm font-semibold leading-tight">Complete your profile to start investing.</p>
+                </div>
+              </div>
+              <Link
+                href="/onboarding"
+                className="bg-[#6B9E31] text-white h-10 px-6 rounded-full text-xs font-bold whitespace-nowrap hover:opacity-90 transition-all flex items-center justify-center flex-shrink-0"
+              >
+                Go
+              </Link>
+            </div>
+          </motion.div>
+        )}
+        <Hero onAction={handleAction} />
         <TrustedBy />
         <UseCases />
-        <Stakeholders />
+        <Stakeholders onAction={handleAction} />
         <Stats />
         <HowItWorks />
-        <CTA />
+        <CTA onAction={handleAction} />
       </main>
       <Footer />
     </div>
